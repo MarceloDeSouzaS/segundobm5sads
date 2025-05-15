@@ -1,7 +1,10 @@
 package com.example.jwt.model;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -9,6 +12,8 @@ import javax.annotation.processing.Generated;
 import java.util.Collection;
 import java.util.List;
 
+@Entity
+@Table(name = "usuario")
 public class Pessoa implements UserDetails {
 
     @Id
