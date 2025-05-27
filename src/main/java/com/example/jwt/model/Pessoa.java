@@ -21,11 +21,14 @@ public class Pessoa implements UserDetails {
     private long id;
     private String password;
     private String login;
-    private String Role;
+    private EnumRole Role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        if(this.Role == EnumRole.ADMIN) return List.Of(new SimpleGrantedAuthority("ADMIN"),
+                new SimpleGrantedAuthority("USER"));
+            else return List.Of(new SimpleGrantedAuthority("USER"));
+
     }
 
     public String getPassword() {
