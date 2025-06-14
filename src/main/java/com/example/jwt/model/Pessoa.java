@@ -6,9 +6,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.annotation.processing.Generated;
 import java.util.Collection;
 import java.util.List;
 
@@ -21,14 +21,27 @@ public class Pessoa implements UserDetails {
     private long id;
     private String password;
     private String login;
-    private EnumRole Role;
+    private EnumRole role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.Role == EnumRole.ADMIN) return List.Of(new SimpleGrantedAuthority("ADMIN"),
+        if(this.role == EnumRole.ADMIN) return List.of(new SimpleGrantedAuthority("ADMIN"),
                 new SimpleGrantedAuthority("USER"));
-            else return List.Of(new SimpleGrantedAuthority("USER"));
+            else return List.of(new SimpleGrantedAuthority("USER"));
 
+    }
+
+    public Pessoa(long id, String password, String login, EnumRole role) {
+        this.id = id;
+        this.password = password;
+        this.login = login;
+        this.role = role;
+    }
+
+    public Pessoa(String password, String login, EnumRole role) {
+        this.password = password;
+        this.login = login;
+        this.role = role;
     }
 
     public String getPassword() {
@@ -72,12 +85,12 @@ public class Pessoa implements UserDetails {
         this.login = login;
     }
 
-    public String getRole() {
-        return Role;
+    public EnumRole getRole() {
+        return role;
     }
 
-    public void setRole(String role) {
-        Role = role;
+    public void setRole(EnumRole role) {
+        this.role = role;
     }
 
     public Pessoa() {

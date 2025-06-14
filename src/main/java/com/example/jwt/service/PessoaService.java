@@ -1,5 +1,6 @@
 package com.example.jwt.service;
 
+import com.example.jwt.model.Pessoa;
 import com.example.jwt.repository.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,5 +17,9 @@ public class PessoaService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
         return pessoaRepository.findByLogin(username);
+    }
+
+    public Pessoa salvar(Pessoa pessoa){
+        return pessoaRepository.save(pessoa);
     }
 }
