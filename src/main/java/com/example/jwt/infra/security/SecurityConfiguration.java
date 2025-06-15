@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -15,32 +17,31 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
-
+        @Autowired
+        SecurityFilter securityFilter;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+        return http
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(authuroize -> authuroize
-                        .requestMatchers(HttpMethod.POST, "/pessoa/buscarPorId").hasRole("ADMIN")
-                        );
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(
-//                                "/auth/**",
-//                                "/v3/api-docs/**",
-//                                "/swagger-ui/**",
-//                                "/swagger-ui.html",
-//                                "/swagger-resources/**",
-//                                "/webjars/**"
-//                        ).permitAll()
-//                        .anyRequest().authenticated()
-//                )
-//
-//                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
+                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/pessoa/listarTodosUsuarios").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/pessoa/editarPessoa/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/pessoa/editarPerfil").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/pessoa/visualizarPerfil").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/pessoa/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/pessoa/*").hasRole("ADMIN")
+                        .anyRequest().permitAll())
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean

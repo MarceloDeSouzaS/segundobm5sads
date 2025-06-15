@@ -1,8 +1,8 @@
 package com.example.jwt.model;
 
 public enum EnumRole {
-    ADMIN("admin"),
-    USER("user");
+    ADMIN("ADMIN"),
+    USER("USER");
 
 
     private final String role;
