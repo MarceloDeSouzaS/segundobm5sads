@@ -8,10 +8,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public class AuthorizationService implements UserDetailsService {
     @Autowired
-    PessoaRepository repostiroy;
+    PessoaRepository pessoaRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return repostiroy.findByLogin(username);
+        return pessoaRepository.findByLogin(username);
     }
 }
